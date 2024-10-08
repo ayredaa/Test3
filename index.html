@@ -55,20 +55,27 @@
     <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSde722k5hHHr3_09dzhKlxGX9UdK-LRCgZSIBn7htnf7knRNA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 
     <script>
-        var timerStarted = false;
+        let timer; // Variable to hold the timer
+        let timerDuration = 10; // Duration for the timer in seconds
+        let timerStarted = false; // Flag to check if the timer has started
 
         // Function to start the countdown
-        function startTimer(duration, display) {
-            var timer = duration, seconds;
-            var interval = setInterval(function () {
-                seconds = timer % 60;
-                seconds = seconds < 10 ? "0" + seconds : seconds;
+        function startTimer() {
+            let remainingTime = timerDuration; // Set remaining time
+            const display = document.getElementById('timer');
+            display.style.display = 'block'; // Show the timer
+            display.textContent = "00:" + remainingTime;
 
+            timer = setInterval(function () {
+                remainingTime--;
+
+                // Format time
+                const seconds = remainingTime < 10 ? "0" + remainingTime : remainingTime;
                 display.textContent = "00:" + seconds;
 
                 // Stop the timer when it runs out and show the message
-                if (--timer < 0) {
-                    clearInterval(interval);
+                if (remainingTime <= 0) {
+                    clearInterval(timer);
                     display.textContent = "Time's up!";
                     document.getElementById('submit-message').style.display = 'block';
                 }
@@ -77,25 +84,23 @@
 
         // Function to detect URL changes in the iframe
         function detectSectionChange() {
-            var iframe = document.getElementById('formFrame');
-            var currentUrl = iframe.src;
+            const iframe = document.getElementById('formFrame');
+            let previousUrl = iframe.src; // Store the initial URL
 
+            // Set an interval to check for URL changes
             setInterval(function () {
-                var newUrl = iframe.contentWindow.location.href;
-                if (newUrl !== currentUrl && !timerStarted) {
-                    currentUrl = newUrl;
+                const currentUrl = iframe.contentWindow.location.href;
 
-                    // Timer starts when the URL changes (user clicks Next)
-                    document.getElementById('timer').style.display = 'block'; // Show the timer
-                    var tenSeconds = 10; // 10 seconds countdown
-                    var display = document.getElementById('timer');
-                    startTimer(tenSeconds, display);
-                    timerStarted = true;
+                // If the URL has changed and the timer hasn't started
+                if (currentUrl !== previousUrl && !timerStarted) {
+                    previousUrl = currentUrl; // Update the previous URL
+                    startTimer(); // Start the timer
+                    timerStarted = true; // Set the flag to true
                 }
-            }, 1000); // Check for URL changes every second
+            }, 1000); // Check every second
         }
 
-        // Start checking for section change when the iframe loads
+        // Start detecting section changes when the iframe loads
         document.getElementById('formFrame').addEventListener('load', function() {
             detectSectionChange();
         });
