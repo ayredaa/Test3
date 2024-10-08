@@ -1,7 +1,7 @@
-// Set the timer for 15 minutes
 let timeLeft = 15 * 60; // 15 minutes in seconds
 let timerId;
 
+// Function to start the timer
 function startTimer() {
     timerId = setInterval(() => {
         const minutes = Math.floor(timeLeft / 60);
@@ -17,5 +17,9 @@ function startTimer() {
     }, 1000);
 }
 
-// Start the timer when the user focuses on Section 2
-document.querySelector('h2:nth-of-type(2)').addEventListener('click', startTimer);
+// Function to go to Section 2
+document.getElementById('nextButton').addEventListener('click', () => {
+    document.getElementById('section1').style.display = 'none';
+    document.getElementById('section2').style.display = 'block';
+    startTimer(); // Start the timer when Section 2 appears
+});
