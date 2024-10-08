@@ -3,10 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Form on GitHub Pages</title>
+    <title>Google Form with 15-Minute Timer</title>
+    <style>
+        /* Center the timer */
+        #timer {
+            font-size: 24px;
+            color: red;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>My Google Form</h1>
+
+    <!-- Timer display -->
+    <div id="timer">15:00</div>
+
+    <!-- Google Form Embed -->
     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSde722k5hHHr3_09dzhKlxGX9UdK-LRCgZSIBn7htnf7knRNA/viewform?embedded=true" width="640" height="16462" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
+    <script>
+        // Function to start the countdown
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            var interval = setInterval(function () {
+                minutes = Math.floor(timer / 60);
+                seconds = timer % 60;
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                // Stop the timer and show alert when time is up
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.textContent = "Time's up!";
+                    // Optional: Disable the form or show a message here
+                    alert("Time is up! Please submit your form.");
+                }
+            }, 1000);
+        }
+
+        // Set the timer for 15 minutes (900 seconds)
+        window.onload = function () {
+            var fifteenMinutes = 60 * 15;
+            var display = document.getElementById('timer');
+            startTimer(fifteenMinutes, display);
+        };
+    </script>
 </body>
 </html>
