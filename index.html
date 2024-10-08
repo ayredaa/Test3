@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Form with Timer After Next Button</title>
+    <title>Google Form with Timer</title>
     <style>
         /* Center the timer and form */
         body {
@@ -45,6 +45,9 @@
 <body>
     <h1>Google Form with Timer</h1>
 
+    <!-- Button to start the section (User Clicks This) -->
+    <button id="startSection2">Start Section 2</button>
+
     <!-- Timer display -->
     <div id="timer">00:10</div>
 
@@ -57,7 +60,6 @@
     <script>
         let timer; // Variable to hold the timer
         let timerDuration = 10; // Duration for the timer in seconds
-        let timerStarted = false; // Flag to check if the timer has started
 
         // Function to start the countdown
         function startTimer() {
@@ -82,27 +84,10 @@
             }, 1000);
         }
 
-        // Function to detect URL changes in the iframe
-        function detectSectionChange() {
-            const iframe = document.getElementById('formFrame');
-            let previousUrl = iframe.src; // Store the initial URL
-
-            // Set an interval to check for URL changes
-            setInterval(function () {
-                const currentUrl = iframe.contentWindow.location.href;
-
-                // If the URL has changed and the timer hasn't started
-                if (currentUrl !== previousUrl && !timerStarted) {
-                    previousUrl = currentUrl; // Update the previous URL
-                    startTimer(); // Start the timer
-                    timerStarted = true; // Set the flag to true
-                }
-            }, 1000); // Check every second
-        }
-
-        // Start detecting section changes when the iframe loads
-        document.getElementById('formFrame').addEventListener('load', function() {
-            detectSectionChange();
+        // Start the timer when the user clicks the button to move to section 2
+        document.getElementById('startSection2').addEventListener('click', function() {
+            startTimer(); // Start the timer
+            this.style.display = 'none'; // Hide the button once timer starts
         });
     </script>
 </body>
