@@ -3,25 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Form with 15-Minute Timer</title>
+    <title>Google Form with Timer and Controlled Submission</title>
     <style>
-        /* Center the timer */
+        /* Center the timer and form */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
         #timer {
             font-size: 24px;
             color: red;
-            text-align: center;
-            margin-top: 20px;
+            margin-bottom: 20px;
+            display: none; /* Hidden until the timer starts */
+        }
+
+        iframe {
+            width: 640px; /* Form width */
+            height: 1000px; /* Adjust height according to your form's length */
+            border: none;
+        }
+
+        /* Optional: Make the form responsive on smaller screens */
+        @media (max-width: 640px) {
+            iframe {
+                width: 100%;
+            }
+        }
+
+        #submit-message {
+            font-size: 18px;
+            color: green;
+            display: none; /* Hidden until the timer runs out */
         }
     </style>
 </head>
 <body>
-    <h1>My Google Form</h1>
+    <h1>Google Form with Timer</h1>
+
+    <!-- Button to start section 2 (Simulates moving to second section) -->
+    <button id="startSection2">Start Section 2</button>
 
     <!-- Timer display -->
     <div id="timer">15:00</div>
 
+    <!-- Message to be shown when the timer ends -->
+    <div id="submit-message">Time's up! Please submit the form.</div>
+
     <!-- Google Form Embed -->
-    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSde722k5hHHr3_09dzhKlxGX9UdK-LRCgZSIBn7htnf7knRNA/viewform?embedded=true" width="640" height="16462" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSde722k5hHHr3_09dzhKlxGX9UdK-LRCgZSIBn7htnf7knRNA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 
     <script>
         // Function to start the countdown
@@ -36,22 +70,36 @@
 
                 display.textContent = minutes + ":" + seconds;
 
-                // Stop the timer and show alert when time is up
+                // Stop the timer when it runs out and show the message
                 if (--timer < 0) {
                     clearInterval(interval);
                     display.textContent = "Time's up!";
-                    // Optional: Disable the form or show a message here
-                    alert("Time is up! Please submit your form.");
+                    document.getElementById('submit-message').style.display = 'block';
+                    disableOtherButtons();
                 }
             }, 1000);
         }
 
-        // Set the timer for 15 minutes (900 seconds)
-        window.onload = function () {
-            var fifteenMinutes = 60 * 15;
+        // Function to disable all buttons except the submit button in the iframe
+        function disableOtherButtons() {
+            var iframe = document.getElementById('formFrame').contentWindow;
+            var buttons = iframe.document.querySelectorAll('button, input[type="button"], input[type="submit"]');
+
+            buttons.forEach(function(button) {
+                if (button.type !== 'submit') {
+                    button.disabled = true; // Disable non-submit buttons
+                }
+            });
+        }
+
+        // Start the timer when the user clicks the button to move to section 2
+        document.getElementById('startSection2').addEventListener('click', function() {
+            document.getElementById('timer').style.display = 'block'; // Show the timer
+            var fifteenMinutes = 60 * 15; // 15 minutes
             var display = document.getElementById('timer');
             startTimer(fifteenMinutes, display);
-        };
+            this.style.display = 'none'; // Hide the button once timer starts
+        });
     </script>
 </body>
 </html>
