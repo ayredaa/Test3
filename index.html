@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Form with Timer and Controlled Submission</title>
+    <title>Google Form with Timer After Next Button</title>
     <style>
         /* Center the timer and form */
         body {
@@ -45,60 +45,59 @@
 <body>
     <h1>Google Form with Timer</h1>
 
-    <!-- Button to start section 2 (Simulates moving to second section) -->
-    <button id="startSection2">Start Section 2</button>
-
     <!-- Timer display -->
-    <div id="timer">15:00</div>
+    <div id="timer">00:10</div>
 
     <!-- Message to be shown when the timer ends -->
-    <div id="submit-message">Time's up! Please submit the form.</div>
+    <div id="submit-message">Time's up! Please submit the form now.</div>
 
     <!-- Google Form Embed -->
     <iframe id="formFrame" src="https://docs.google.com/forms/d/e/1FAIpQLSde722k5hHHr3_09dzhKlxGX9UdK-LRCgZSIBn7htnf7knRNA/viewform?embedded=true" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 
     <script>
+        var timerStarted = false;
+
         // Function to start the countdown
         function startTimer(duration, display) {
-            var timer = duration, minutes, seconds;
+            var timer = duration, seconds;
             var interval = setInterval(function () {
-                minutes = Math.floor(timer / 60);
                 seconds = timer % 60;
-
-                minutes = minutes < 10 ? "0" + minutes : minutes;
                 seconds = seconds < 10 ? "0" + seconds : seconds;
 
-                display.textContent = minutes + ":" + seconds;
+                display.textContent = "00:" + seconds;
 
                 // Stop the timer when it runs out and show the message
                 if (--timer < 0) {
                     clearInterval(interval);
                     display.textContent = "Time's up!";
                     document.getElementById('submit-message').style.display = 'block';
-                    disableOtherButtons();
                 }
             }, 1000);
         }
 
-        // Function to disable all buttons except the submit button in the iframe
-        function disableOtherButtons() {
-            var iframe = document.getElementById('formFrame').contentWindow;
-            var buttons = iframe.document.querySelectorAll('button, input[type="button"], input[type="submit"]');
+        // Function to detect URL changes in the iframe
+        function detectSectionChange() {
+            var iframe = document.getElementById('formFrame');
+            var currentUrl = iframe.src;
 
-            buttons.forEach(function(button) {
-                if (button.type !== 'submit') {
-                    button.disabled = true; // Disable non-submit buttons
+            setInterval(function () {
+                var newUrl = iframe.contentWindow.location.href;
+                if (newUrl !== currentUrl && !timerStarted) {
+                    currentUrl = newUrl;
+
+                    // Timer starts when the URL changes (user clicks Next)
+                    document.getElementById('timer').style.display = 'block'; // Show the timer
+                    var tenSeconds = 10; // 10 seconds countdown
+                    var display = document.getElementById('timer');
+                    startTimer(tenSeconds, display);
+                    timerStarted = true;
                 }
-            });
+            }, 1000); // Check for URL changes every second
         }
 
-        // Start the timer when the user clicks the button to move to section 2
-        document.getElementById('startSection2').addEventListener('click', function() {
-            document.getElementById('timer').style.display = 'block'; // Show the timer
-            var fifteenMinutes = 60 * 15; // 15 minutes
-            var display = document.getElementById('timer');
-            startTimer(fifteenMinutes, display);
-            this.style.display = 'none'; // Hide the button once timer starts
+        // Start checking for section change when the iframe loads
+        document.getElementById('formFrame').addEventListener('load', function() {
+            detectSectionChange();
         });
     </script>
 </body>
