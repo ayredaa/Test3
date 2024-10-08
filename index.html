@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <form id="assessmentForm" action="https://formspree.io/f/xyzygbaq" method="POST">
+            <h1>Assessment Form</h1>
+
+            <h2>Section 1</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <h2>Section 2: Personality Test</h2>
+            <p id="timer">Time remaining: <span id="time">15:00</span></p>
+
+            <p>1. "In a party, I will... / Pada sebuah pesta, apakah Anda..."</p>
+            <label>
+                <input type="radio" name="party" value="hang out with a lot of people, including people i just meet / bergaul dengan banyak orang termasuk orang-orang yang baru saya kenal" required>
+                hang out with a lot of people, including people I just meet / bergaul dengan banyak orang termasuk orang-orang yang baru saya kenal
+            </label>
+            <label>
+                <input type="radio" name="party" value="hang out with people I already know / bergaul dengan beberapa orang yang telah saya kenal saja">
+                hang out with people I already know / bergaul dengan beberapa orang yang telah saya kenal saja
+            </label>
+
+            <p>2. "I am a _______ person / Saya adalah seseorang yang ____"</p>
+            <label>
+                <input type="radio" name="personality" value="Realistic / Realistic" required>
+                Realistic / Realistic
+            </label>
+            <label>
+                <input type="radio" name="personality" value="Speculative / Spekulatif">
+                Speculative / Speculative
+            </label>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
